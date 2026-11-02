@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f6c7dc"><meta name="description" content="SyarFitness — workout, Taekwondo dan sleep tracker.">
+<link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png">
+<title>SyarFitness 🎀</title>
+<style>
+:root{--pink:#f6c7dc;--deep:#9b4f73;--pale:#fff1f6;--ink:#63354b;--white:#fff;--line:#f0d5e1}
+*{box-sizing:border-box}body{margin:0;background:var(--pale);color:var(--ink);font:16px system-ui,-apple-system,sans-serif}
+header{background:var(--pink);padding:24px 18px 18px;border-radius:0 0 26px 26px}
+h1{margin:0;font-size:29px;color:#71364f}header p{margin:4px 0 0;color:#81536a}
+main{max-width:720px;margin:auto;padding:14px;display:grid;gap:14px}
+.card{background:white;border-radius:20px;padding:16px;box-shadow:0 3px 14px #a85d7910}
+h2{font-size:19px;margin:0 0 10px;color:#854360}.muted{color:#9a7184;font-size:13px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}.stat{background:#fff8fb;padding:12px;border-radius:14px}.stat b{display:block;font-size:25px;color:var(--deep)}
+.progress{height:9px;background:#f8dce8;border-radius:20px;overflow:hidden;margin:8px 0 12px}.bar{height:100%;background:#d65d91;width:0}
+label.task{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid #faedf3}input[type=checkbox]{accent-color:#c65b8a;width:19px;height:19px}
+button{border:0;border-radius:999px;padding:11px 15px;background:#c65b8a;color:white;font-weight:650;font-size:14px;cursor:pointer}button.secondary{background:#fce3ed;color:#814461}button:active{transform:scale(.98)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.timer{font-size:48px;font-weight:750;text-align:center;color:var(--deep);font-variant-numeric:tabular-nums;margin:8px}
+.day{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #faedf3}
+input[type=time],input[type=text]{padding:10px;border:1px solid var(--line);border-radius:12px;font:inherit;color:var(--ink);background:#fff;width:100%}
+.field{display:grid;gap:5px;margin:9px 0}.field label{font-size:13px;color:#81536a}
+footer{text-align:center;color:#a4778c;font-size:12px;padding:5px 15px 25px}
+</style></head>
+<body>
+<header><h1>SyarFitness 🎀</h1><p>your little fitness diary ♡</p><div class="stats"><div class="stat"><b id="percent">0%</b><span class="muted">Workout hari ini</span></div><div class="stat"><b id="weekCount">0/7</b><span class="muted">Hari ditrack minggu ini</span></div></div></header>
+<main>
+<section class="card"><h2>🌷 Workout hari ini</h2><div class="muted" id="count">0 daripada 7 selesai</div><div class="progress"><div class="bar" id="bar"></div></div><div id="tasks"></div><button class="secondary" id="resetTasks">Reset checklist</button></section>
+<section class="card"><h2>⏱️ Rest timer</h2><div class="timer" id="timer">00:45</div><div class="row" style="justify-content:center"><button class="secondary preset" data-time="30">30s</button><button class="secondary preset" data-time="45">45s</button><button class="secondary preset" data-time="60">60s</button></div><div class="row" style="justify-content:center;margin-top:12px"><button id="start">Mula ♡</button><button class="secondary" id="resetTimer">Reset</button></div><p class="muted" id="timerStatus" style="text-align:center">Pilih masa rehat kau!</p></section>
+<section class="card"><h2>📅 Weekly tracker</h2><p class="muted">Tanda hari yang kau dah lengkapkan aktiviti.</p><div id="days"></div><p class="muted">Isnin: Full body · Selasa: Cardio + core · Rabu: Lower body · Khamis: Recovery · Jumaat: Taekwondo sparring · Sabtu: Upper body ringan jika pulih · Ahad: Taekwondo asas.</p></section>
+<section class="card"><h2>🥋 Taekwondo tracker</h2><label class="task"><input type="checkbox" id="fri"> Jumaat — Sparring (4:30 petang)</label><label class="task"><input type="checkbox" id="sun"> Ahad — Latihan asas (4:30 petang)</label><p class="muted" id="tkdCount">0/2 sesi direkodkan</p></section>
+<section class="card"><h2>🌙 Sleep tracker</h2><div class="field"><label for="bed">Waktu tidur</label><input type="time" id="bed" value="22:00"></div><div class="field"><label for="wake">Waktu bangun</label><input type="time" id="wake" value="06:00"></div><div class="field"><label for="note">Nota tidur (optional)</label><input type="text" id="note" placeholder="Contoh: tidur lena"></div><button id="saveSleep">Simpan rekod tidur</button><p class="muted" id="sleepResult">Sasaran tidur: 8–10 jam. Rekod kau disimpan dalam peranti ini.</p></section>
+</main><footer>Progress kecil pun tetap progress ♡<br>SyarFitness · versi 1.0 · Data disimpan pada peranti ini</footer>
+<script src="app.js"></script>
+</body></html>
