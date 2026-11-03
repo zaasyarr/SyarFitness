@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7a8c8">
+<title>SyarFitness</title>
+<style>
+body{margin:0;background:#fff6fa;color:#49333e;font-family:Arial,sans-serif}
+header{background:#f7b5d0;padding:25px;text-align:center;border-radius:0 0 25px 25px}
+h1{margin:5px;color:#873e61}
+main{padding:18px;max-width:650px;margin:auto}
+.card{background:white;padding:17px;border-radius:18px;margin:12px 0;box-shadow:0 3px 12px #e8cbd8}
+button{background:#e989b1;color:white;border:0;border-radius:12px;padding:12px;margin:4px;font-weight:bold}
+input{padding:10px;border:1px solid #e9bfd0;border-radius:10px}
+.menu{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.menu button{min-height:85px;font-size:16px}
+.page{display:none}.page.active{display:block}
+.item{padding:12px;border-bottom:1px solid #f4dce6}
+.item input{margin-right:10px}
+.timer{text-align:center;font-size:45px;color:#c94f83;font-weight:bold}
+.back{background:#a76a86}
+small{color:#987b89}
+</style>
+</head>
+<body>
+<header>
+<h1>🌸 SyarFitness</h1>
+<p>Small steps, stronger you!</p>
+</header>
+<main>
+
+<section id="home" class="page active">
+<div class="card">
+<h2>Hai! 💗</h2>
+<p>Selamat datang ke SyarFitness.</p>
+<p>Jom bina rutin yang sihat!</p>
+</div>
+<h3>Main Menu</h3>
+<div class="menu">
+<button onclick="openPage('tracker')">📅<br>Track Hari</button>
+<button onclick="openPage('workout')">🏋️<br>Workout</button>
+<button onclick="openPage('timer')">⏱️<br>Timer</button>
+<button onclick="openPage('tkd')">🥋<br>Taekwondo</button>
+<button onclick="openPage('sleep')">🌙<br>Sleep Tracker</button>
+<button onclick="openPage('progress')">📈<br>Progress</button>
+</div>
+</section>
+
+<section id="tracker" class="page">
+<button class="back" onclick="openPage('home')">← Kembali</button>
+<div class="card">
+<h2>📅 Track Hari</h2>
+<input type="date" id="trackDate">
+<button onclick="markDay()">Tanda Hari Aktif</button>
+<div id="days"></div>
+</div>
+</section>
+
+<section id="workout" class="page">
+<button class="back" onclick="openPage('home')">← Kembali</button>
+<div class="card">
+<h2>🏋️ Workout</h2>
+<div id="exercises"></div>
+<button onclick="saveWorkout()">Simpan Workout</button>
+</div>
+</section>
+
+<section id="timer" class="page">
+<button class="back" onclick="openPage('home')">← Kembali</button>
+<div class="card">
+<h2>⏱️ Timer</h2>
+<input id="minutes" type="number" value="5" min="1">
+<div class="timer" id="clock">05:00</div>
+<button onclick="startTimer()">Mula</button>
+<button onclick="pauseTimer()">Pause</button>
+<button onclick="resetTimer()">Reset</button>
+</div>
+</section>
+
+<section id="tkd" class="page">
+<button class="back" onclick="openPage('home')">← Kembali</button>
+<div class="card">
+<h2>🥋 Taekwondo</h2>
+<input type="date" id="tkdDate">
+<input id="tkdNote" placeholder="Catatan latihan">
+<button onclick="saveTkd()">Simpan</button>
+<div id="tkdList"></div>
+</div>
+</section>
+
+<section id="sleep" class="page">
+<button class="back" onclick="openPage('home')">← Kembali</button>
+<div class="card">
+<h2>🌙 Sleep Tracker</h2>
+<label>Waktu tidur</label><br>
+<input type="time" id="sleepStart" value="22:00"><br><br>
+<label>Waktu bangun</label><br>
+<input type="time" id="sleepEnd" value="06:00"><br>
+<button onclick="saveSleep()">Simpan Tidur</button>
+<div id="sleepResult"></div>
+</div>
+</section>
+
+<section id="progress" class="page">
+<button class="back" onclick="openPage('home')">← Kembali</button>
+<div class="card">
+<h2>📈 Progress</h2>
+<p>Hari aktif: <b id="totalDays">0</b></p>
+<p>Workout selesai: <b id="totalWork">0</b></p>
+<p>Kelas Taekwondo: <b id="totalTkd">0</b></p>
+<p>Rekod tidur: <b id="totalSleep">0</b></p>
+</div>
+</section>
+
+</main>
+<script>
+const get=(k,d)=>JSON.parse(localStorage.getItem(k)||JSON.stringify(d));
+const put=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+let active=get("active",[]);
+let workouts=get("workouts",[]);
+let tkd=get("tkd",[]);
+let sleeps=get("sleeps",[]);
+function openPage(id){
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+render();
+}
+function markDay(){
+let d=document.getElementById("trackDate").value;
+if(!d)return alert("Pilih tarikh dahulu");
+if(!active.includes(d))active.push(d);
+put("active",active);render();
+}
+const exercises=["Warm-up 5 min","Squat 2 × 10","Push-up 2 × 8","Glute bridge 2 × 12","Plank 2 × 20 saat","Cool-down 5 min"];
+document.getElementById("exercises").innerHTML=exercises.map((x,i)=>`<div class="item"><label><input type="checkbox" id="ex${i}">${x}</label></div>`).join("");
+function saveWorkout(){
+let done=exercises.map((x,i)=>document.getElementById("ex"+i).checked);
+workouts.push({date:new Date().toISOString().slice(0,10),done});
+put("workouts",workouts);alert("Workout disimpan! 💗");render();
+}
+let seconds=300,clockTimer=null;
+function showClock(){document.getElementById("clock").textContent=String(Math.floor(seconds/60)).padStart(2,"0")+":"+String(seconds%60).padStart(2,"0")}
+function resetTimer(){pauseTimer();seconds=Math.max(1,+document.getElementById("minutes").value||1)*60;showClock()}
+function startTimer(){if(clockTimer)return;clockTimer=setInterval(()=>{if(seconds>0){seconds--;showClock()}else{pauseTimer();alert("Masa tamat!")}},1000)}
+function pauseTimer(){clearInterval(clockTimer);clockTimer=null}
+function saveTkd(){
+let d=document.getElementById("tkdDate").value||new Date().toISOString().slice(0,10);
+tkd.push({date:d,note:document.getElementById("tkdNote").value});
+put("tkd",tkd);document.getElementById("tkdNote").value="";render();
+}
+function saveSleep(){
+let a=document.getElementById("sleepStart").value.split(":").map(Number);
+let b=document.getElementById("sleepEnd").value.split(":").map(Number);
+let m=b[0]*60+b[1]-a[0]*60-a[1];if(m<=0)m+=1440;
+let h=(m/60).toFixed(1);
+sleeps.push(h);put("sleeps",sleeps);
+document.getElementById("sleepResult").textContent="Tempoh tidur: "+h+" jam";
+render();
+}
+function render(){
+document.getElementById("days").innerHTML=active.slice().sort().reverse().map(d=>"<p>🌸 "+d+"</p>").join("");
+document.getElementById("tkdList").innerHTML=tkd.map(x=>"<p>🥋 "+x.date+" — "+x.note+"</p>").join("");
+document.getElementById("totalDays").textContent=active.length;
+document.getElementById("totalWork").textContent=workouts.length;
+document.getElementById("totalTkd").textContent=tkd.length;
+document.getElementById("totalSleep").textContent=sleeps.length;
+}
+render();showClock();
+</script>
+</body>
+</html>
